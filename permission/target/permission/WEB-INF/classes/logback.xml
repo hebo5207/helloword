@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--执行速度比Log4J快  有丰富的文档  可以热加载  自动压缩  。。。-->
+<!-- scan="true"  是否自动加载  scanPeriod="60 seconds"  自动加载时间  默认单位mm-->
+<configuration scan="true" scanPeriod="60 seconds">
+
+    <!--可以有多个 appender  logger 只能有一个root-->
+    <!--标准输出  输出在控制台-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 压缩文件 -->
+    <!--<appender name="permission" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+    <!--<file>${catalina.home}/logs/permission.log</file>-->
+    <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+    <!--<FileNamePattern>${catalina.home}/logs/permission.%d{yyyy-MM-dd}.log.gz</FileNamePattern>-->
+    <!--</rollingPolicy>-->
+    <!--<layout class="ch.qos.logback.classic.PatternLayout">-->
+    <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>-->
+    <!--</layout>-->
+    <!--</appender>-->
+    <!---->
+    <!--<logger name="xxx" level="INFO">-->
+    <!--<appender-ref ref="permission"/>-->
+    <!--</logger>-->
+
+    <!-- TRACE < DEBUG < INFO < WARN < ERROR -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>

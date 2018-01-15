@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <!-- 分页 -->
+        <setting name="safeRowBoundsEnabled" value="true"/>
+        <!--缓存-->
+        <setting name="cacheEnabled" value="false" />
+        <!--自动生成Key-->
+        <setting name="useGeneratedKeys" value="true" />
+    </settings>
+
+    <!--别名-->
+    <!--<typeAliases>-->
+    <!---->
+    <!--</typeAliases>-->
+
+    <!--监听  执行的Sql   执行时间等  -->
+    <!--<plugins>-->
+    <!--<plugin interceptor=""></plugin>-->
+    <!--</plugins>-->
+
+    <!--如果本地类无法与Sql值映射的时候，
+    将查询出来的结果自动转换为对象，如枚举的时候-->
+    <!--<typeHandlers>-->
+    <!---->
+    <!--</typeHandlers>-->
+
+</configuration>
