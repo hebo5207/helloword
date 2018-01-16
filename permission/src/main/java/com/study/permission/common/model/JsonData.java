@@ -43,7 +43,7 @@ public class JsonData {
     }
 
     /**
-     * 数据请求成功
+     * 数据请求成功  多用于查询
      * @param obj   请求的结果
      * @return  com.study.permission.common.model.JsonData
      */
@@ -51,6 +51,14 @@ public class JsonData {
         JsonData jsonData = new JsonData(true);
         jsonData.setData(obj);
         return jsonData;
+    }
+
+    /**
+     * 请求成功，多用于添加和修改，删除
+     * @return
+     */
+    public static JsonData success() {
+        return new JsonData(true);
     }
 
     /**
