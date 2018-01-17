@@ -1,5 +1,6 @@
 package com.study.permission.service;
 
+import com.google.common.base.Preconditions;
 import com.study.permission.common.exception.ParamException;
 import com.study.permission.dao.SysDeptMapper;
 import com.study.permission.model.SysDept;
@@ -67,6 +68,7 @@ public class SysDeptService {
             throw new ParamException("当前部门名称在当前父节点下已经存在了");
         }
         SysDept oldSysDept = sysDeptMapper.selectByPrimaryKey(sysDeptParam.getId());
+        Preconditions.checkNotNull(oldSysDept,"待更新的部门不存在");
         SysDept newSysDept = SysDept.builder()
                 .id(sysDeptParam.getId())
                 .name(sysDeptParam.getName())

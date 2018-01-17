@@ -50,7 +50,7 @@ public class SysTreeService {
         // 查找出第一级的所有部门
         for (DeptLevelDto deptLevelDto : deptLevelDtos) {
             deptLevelMap.put(deptLevelDto.getLevel(), deptLevelDto);
-            if (LevelUtil.ROOT.equals(deptLevelDto)) {
+            if (LevelUtil.ROOT.equals(deptLevelDto.getLevel())) {
                 rootDeptLevels.add(deptLevelDto);
             }
         }
