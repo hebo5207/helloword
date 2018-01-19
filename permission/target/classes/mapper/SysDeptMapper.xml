@@ -139,36 +139,5 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-    <!--查询所有的子部门-->
-    <select id="getAllDept" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from sys_dept
-    </select>
-
-    <!--查询所有的子部门-->
-    <select id="getChildDept" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from sys_dept
-        where level like #{level} || '.%'
-    </select>
-
-    <!--批量更新子节点-->
-    <update id="updateBatchChildDept" parameterType="map">
-        <foreach collection="map" item="sysDept" separator=";">
-            update sys_dept set level = #{sysDept.level} where id = #{sysDept.id}
-        </foreach>
-    </update>
-
-
-    <select id="selectCountByOldDept" parameterType="map" resultType="int">
-        select count(1) from sys_dept where
-        name = #{name}
-        <if test="parentId != null">
-            and parent_id = #{parentId}
-        </if>
-    </select>
-
 
 </mapper>
