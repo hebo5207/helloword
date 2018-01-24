@@ -8,13 +8,14 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.beans.BeanUtils;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
 @ToString
 public class SysMenuDto extends SysMenu {
-    private List<SysMenuDto> sysMenuDtos = Lists.newArrayList();
+    private List<SysMenuDto> children = Lists.newArrayList();
 
     /**
      * 将SysMenu 的值copy到SysMenuDto

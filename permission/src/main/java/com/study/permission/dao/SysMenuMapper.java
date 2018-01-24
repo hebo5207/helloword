@@ -1,6 +1,7 @@
 package com.study.permission.dao;
 
 import com.study.permission.model.SysMenu;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -22,4 +23,8 @@ public interface SysMenuMapper {
      * @return
      */
     List<SysMenu> getAllMenu();
+
+    String getMenuStr(@Param("id") Integer id);
+
+    int checkNameIsExits(@Param("name") String name,@Param("parentId") Integer parentId);
 }

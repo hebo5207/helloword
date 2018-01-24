@@ -179,4 +179,21 @@
     <include refid="Base_Column_List" />
     from sys_menu
   </select>
+
+  <!-- 获得当前菜单和上级菜单的名称   -->
+  <select id="getMenuStr" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT
+    CONCAT_WS('@',a.name,b.name)
+    FROM sys_menu a
+    LEFT JOIN sys_menu b ON a.id=b.parent_id
+    WHERE 1=1
+    <if test="id != null and id != ''">
+       and b.id = #{id}
+    </if>
+  </select>
+  
+  <select id="checkNameIsExits" parameterType="map" resultType="int">
+      SELECT COUNT(*) FROM sys_menu m WHERE   m.name= #{name} AND m.parent_id = #{parentId}
+  </select>
+  
 </mapper>
