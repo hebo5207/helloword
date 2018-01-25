@@ -34,9 +34,6 @@
                     alert("获取导航失败，" + data.data)
                 }
             }
-
-
         })
     }
-
 </script>

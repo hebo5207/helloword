@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 
 @Controller
 @RequestMapping("/sys/menu")
@@ -54,11 +57,29 @@ public class SysMenuController {
         return new ModelAndView("sys/menu/menu-icon");
     }
 
-    @RequestMapping("/update")
+    @RequestMapping("/update.json")
     @ResponseBody
     public JsonData update(SysMenuParam sysMenuParam){
         sysMenuService.update(sysMenuParam);
         return JsonData.success();
+    }
+
+
+    /**
+     * 这是测试
+     * @param name
+     * @return
+     */
+    @RequestMapping("/test.json")
+    @ResponseBody
+    public String test(String name){
+        try {
+            System.out.println(name);
+            System.out.println(new String(name.getBytes("iso-8859-1"),"utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return "aa";
     }
 
 }

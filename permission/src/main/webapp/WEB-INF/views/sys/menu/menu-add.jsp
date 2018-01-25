@@ -20,8 +20,8 @@
 <head>
     <base href="<%=basePath%>"/>
     <jsp:include page="../../common/top.jsp"/>
-    <meta charset="utf-8">
     <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport"
           content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
@@ -47,8 +47,9 @@
 </head>
 <body>
 <div class="page-container">
-    <input id="pageInfo" type="text" name="<%=type%>" value="<%=menuId%>" style="display: none"/>
-    <form method="post" class="form form-horizontal" id="form-menu-info">
+
+    <form class="form form-horizontal" id="form-menu-info">
+        <input id="pageInfo" type="text" class="<%=type%>" name="id" value="<%=menuId%>" style="display: none"/>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>菜单名称：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -113,6 +114,25 @@
 </body>
 </html>
 
+<%-- 点击提交按钮 --%>
+<script type="text/javascript">
+    $(".submitBtn").click(function () {
+        $.ajax({
+            url:"sys/menu/update.json",
+            data: $("#form-menu-info").serializeArray(),
+            type:"post",
+            success:function (result) {
+                if(result.ret){
+                    layer.msg('修改成功', {icon: 1});
+                }else{
+                    layer.msg(result.msg, {icon: 5});
+                }
+            }
+        });
+    })
+</script>
+
+
 <!-- 界面初始化 -->
 <script type="text/javascript">
 
@@ -120,7 +140,7 @@
     // 如果是添加，界面没有任何值，并且显示提交按钮
     // 如果是修改，展示信息，并且显示提交按钮
     // 1. 先判断是什么类型
-    var type = $("#pageInfo").attr("name");
+    var type = $("#pageInfo").attr("class");
     var menuId = $("#pageInfo").val();
     var inputs = $("input");
     if (type == "info") {
@@ -218,19 +238,3 @@
     }
 </script>
 
-<%-- 点击提交按钮 --%>
-<script type="application/javascript">
-    $(".submitBtn").click(function () {
-        $.ajax({
-            type:"post",
-            url:"sys/menu/update?" + $("#form-menu-info").serialize() + "&id=" + $("#pageInfo").val(),
-            success:function (result) {
-                if(result.ret){
-                    layer.msg('修改成功', {icon: 5});
-                }else{
-                    layer.msg(result.msg, {icon: 5});
-                }
-            }
-        });
-    })
-</script>
