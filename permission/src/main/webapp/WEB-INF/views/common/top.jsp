@@ -21,7 +21,7 @@
 <script type="application/javascript">
     function addNav(id) {
         $.ajax({
-            url:"/sys/menu/navStr?id=" + id,
+            url:"/sys/menu/navStr.json?id=" + id,
             success:function (data) {
                 if(data.ret){
                     var navTemplate = $("#navTemplate").html();

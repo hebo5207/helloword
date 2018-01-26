@@ -19,6 +19,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -31,11 +33,44 @@ public class SysMenuService {
     @Resource
     private SysMenuMapper sysMenuMapper;
 
+
+    public void delete( Integer id){
+        if(checkNameIsExits("",id)){
+            throw  new ParamException("当前菜单下有子菜单，请先删除子菜单");
+        }
+        sysMenuMapper.deleteByPrimaryKey(id);
+    }
+
+
+
     /**
-     * 修改菜单信息,如果下面有子部门不能移动
+     * 添加菜单
      * 1.检查参数
-     * 2.检查同一级是否重名
-     * 3.更改菜单
+     * 2.检查是否同名
+     * 3.设置Level operator信息
+     * 4.添加
+     * @param sysMenuParam SysMenuParam
+     */
+    public void add(SysMenuParam sysMenuParam){
+        BeanValidator.check(sysMenuParam);
+        SysMenu sysMenu = SysMenuParam.sysMenuParamToSysMenu(sysMenuParam);
+        if(sysMenu.getParentId() == 0 ){
+            sysMenu.setLevel("0");
+        }else{
+            SysMenu sysMenuParent = sysMenuMapper.selectByPrimaryKey(sysMenu.getParentId());
+            sysMenu.setLevel(LevelUtil.calculateLevel(sysMenuParent.getLevel(),sysMenuParent.getId()));
+        }
+        if(checkNameIsExits(sysMenu.getName(),sysMenu.getParentId())){
+            throw new ParamException("当前菜单下已经有叫" + sysMenu.getName() + "名称的菜单了");
+        }
+        sysMenuMapper.insertSelective(sysMenu);
+
+    }
+
+    /**
+     * 修改菜单信息
+     * 1.检查参数
+     * 2.更改菜单
      * @param sysMenuParam SysMenuParam
      */
     public void update(SysMenuParam sysMenuParam){
@@ -44,9 +79,8 @@ public class SysMenuService {
 
         Preconditions.checkNotNull(oldSysMenu, "待更新的菜单不存在");
         SysMenu newSysMenu = SysMenuParam.sysMenuParamToSysMenu(sysMenuParam);
-        if(checkNameIsExits(newSysMenu.getName(),newSysMenu.getParentId())){
-            throw new ParamException("当前菜单下已经有叫" + newSysMenu.getName() + "名称的菜单了");
-        }
+        newSysMenu.setId(sysMenuParam.getId());
+
         sysMenuMapper.updateByPrimaryKeySelective(newSysMenu);
     }
 
@@ -57,7 +91,7 @@ public class SysMenuService {
      * @return
      */
     public boolean checkNameIsExits(String name,Integer parentId){
-        return sysMenuMapper.checkNameIsExits(name,parentId) >0 ;
+        return sysMenuMapper.checkCountByParam(name,parentId) >0 ;
     }
 
     /**
@@ -128,6 +162,8 @@ public class SysMenuService {
                 rootSysMenu.add(sysMenuDto);
             }
         }
+        // 按照seq从小到大排序
+        Collections.sort(rootSysMenu,comparator);
         // 2. 根据root节点使用递归函数完成树结构的封装
         return createTree(rootSysMenu, multimap);
     }
@@ -145,6 +181,8 @@ public class SysMenuService {
                 String nextLevel = LevelUtil.calculateLevel(sysMenuDto.getLevel(), sysMenuDto.getId());
                 List<SysMenuDto> sysMenuDtos = (List<SysMenuDto>) multimap.get(nextLevel);
                 if (CollectionUtils.isNotEmpty(sysMenuDtos)) {
+                    // 按照seq从小到大排序
+                    Collections.sort(sysMenuDtos,comparator);
                     sysMenuDto.setChildren(sysMenuDtos);
                 }
             }
@@ -152,5 +190,13 @@ public class SysMenuService {
         return rootSysMenu;
     }
 
+    /**
+     * Menu方式
+     */
+    public Comparator comparator = new Comparator<SysMenuDto>() {
+        public int compare(SysMenuDto o1, SysMenuDto o2) {
+            return o1.getSeq() - o2.getSeq();
+        }
+    };
 
 }

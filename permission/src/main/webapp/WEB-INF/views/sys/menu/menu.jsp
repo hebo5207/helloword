@@ -52,7 +52,7 @@
                                                                        href="javascript:location.replace(location.href);"
                                                                        title="刷新"><i
             class="Hui-iconfont">&#xe68f;</i></a></nav>
-    <iframe ID="testIframe" Name="testIframe" FRAMEBORDER=0 SCROLLING=AUTO src="sys/menu/toMenuAddPage?type=info&id=-1"
+    <iframe ID="testIframe" Name="testIframe" FRAMEBORDER=0 SCROLLING=AUTO src="sys/menu/toMenuAddPage.page?type=info&id=-1"
             width=100% height=500></iframe>
 </div>
 
@@ -91,13 +91,25 @@
 
     // 删除按钮
     function zTreeBeforeRemove(treeId, treeNode) {
-        alert("dfd");
+      $.ajax({
+          url:"sys/menu/delete.json?id=" + treeNode.id,
+          success:function(result) {
+            if(result.ret){
+                layer.msg("删除成功", {icon: 1});
+                setTimeout(function () {
+                    window.location.reload();
+                },1000);
+            }else{
+                layer.msg("删除失败，" + result.msg, {icon: 5});
+            }
+          }
+      });
         return false;
     }
 
     /*添加按钮*/
-    function zTreeBeforeAdd() {
-
+    function zTreeBeforeAdd(menuId) {
+        initIframe("add",menuId);
     }
 
     /*节点点击的时候*/
@@ -141,7 +153,7 @@
         var btn = $("#addBtn_" + treeNode.tId);
         /*点击+号的方法*/
         if (btn) btn.bind("click", function () {
-            zTreeBeforeAdd();
+            zTreeBeforeAdd(treeNode.id);
             return false;
         });
     };
@@ -158,7 +170,7 @@
             $("#testIframe").remove();
         }
         var html = " <iframe id=\"testIframe\" Name=\"testIframe\" FRAMEBORDER=0 SCROLLING=AUTO" +
-            " width=100%  height=500 SRC=\"sys/menu/toMenuAddPage?type=" + type + "&id=" + id + "\"></iframe>";
+            " width=100%  height=500 SRC=\"sys/menu/toMenuAddPage.page?type=" + type + "&id=" + id + "\"></iframe>";
         $(".breadcrumb").after(html);
     }
 

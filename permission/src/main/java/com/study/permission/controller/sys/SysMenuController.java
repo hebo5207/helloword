@@ -21,7 +21,7 @@ public class SysMenuController {
     @Resource
     SysMenuService sysMenuService;
 
-    @RequestMapping("/toMenuPage")
+    @RequestMapping("/toMenuPage.page")
     public ModelAndView toMenuPage(Integer id){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("id",id);
@@ -29,7 +29,7 @@ public class SysMenuController {
         return modelAndView;
     }
 
-    @RequestMapping("/toMenuAddPage")
+    @RequestMapping("/toMenuAddPage.page")
     public ModelAndView toMenuAddPage(@Param("type") String type,@Param("id") String id){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("sys/menu/menu-add");
@@ -38,13 +38,13 @@ public class SysMenuController {
         return modelAndView;
     }
 
-    @RequestMapping("/select")
+    @RequestMapping("/select.json")
     @ResponseBody
     public JsonData select(@Param("id") Integer id){
         return JsonData.success(sysMenuService.getSysMenuByKey(id));
     }
 
-    @RequestMapping("/navStr")
+    @RequestMapping("/navStr.json")
     @ResponseBody
     public JsonData  navStr(@Param("id") Integer id){
         String str = sysMenuService.getMenuStr(id);
@@ -52,7 +52,7 @@ public class SysMenuController {
         return JsonData.success(strs);
     }
 
-    @RequestMapping("/toIconPage")
+    @RequestMapping("/toIconPage.page")
     public ModelAndView toIconPage(){
         return new ModelAndView("sys/menu/menu-icon");
     }
@@ -64,22 +64,19 @@ public class SysMenuController {
         return JsonData.success();
     }
 
-
-    /**
-     * 这是测试
-     * @param name
-     * @return
-     */
-    @RequestMapping("/test.json")
+    @RequestMapping("/add.json")
     @ResponseBody
-    public String test(String name){
-        try {
-            System.out.println(name);
-            System.out.println(new String(name.getBytes("iso-8859-1"),"utf-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return "aa";
+    public JsonData add(SysMenuParam sysMenuParam){
+        sysMenuService.add(sysMenuParam);
+        return JsonData.success();
     }
+
+    @RequestMapping("/delete.json")
+    @ResponseBody
+    public JsonData delete(@Param("id") Integer id){
+        sysMenuService.delete(id);
+        return JsonData.success();
+    }
+
 
 }

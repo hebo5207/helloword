@@ -117,13 +117,22 @@
 <%-- 点击提交按钮 --%>
 <script type="text/javascript">
     $(".submitBtn").click(function () {
+        var type = $("#pageInfo").attr("class");
+        if(type == "add"){
+            $("#pageInfo").val("");
+        }
         $.ajax({
-            url:"sys/menu/update.json",
+            url:type == "update" ?"sys/menu/update.json" : "sys/menu/add.json",
             data: $("#form-menu-info").serializeArray(),
             type:"post",
             success:function (result) {
                 if(result.ret){
-                    layer.msg('修改成功', {icon: 1});
+                    var msg = "";
+                    type == "update" ?msg = "修改成功" : msg = "添加成功";
+                    layer.msg(msg, {icon: 1});
+                    setTimeout(function () {
+                        parent.window.location.reload();
+                    },1000);
                 }else{
                     layer.msg(result.msg, {icon: 5});
                 }
@@ -153,7 +162,8 @@
 
     /*添加*/
     function MenuAdd() {
-
+        $("#prentStr").css("display", "none");
+        initSelect(menuId);
     }
 
 
@@ -186,7 +196,7 @@
             area: ['700px', '450px'],
             fixed: false, //不固定
             maxmin: true,
-            content: 'sys/menu/toIconPage'
+            content: 'sys/menu/toIconPage.page'
         });
     }
 
@@ -212,7 +222,7 @@
     /*初始化信息*/
     function initMenuInfo(menuId,type) {
         $.ajax({
-            url: "sys/menu/select?id=" + menuId,
+            url: "sys/menu/select.json?id=" + menuId,
             success: function (result) {
                 if (result.ret) {
                     $("#menuName").val(result.data.name);
