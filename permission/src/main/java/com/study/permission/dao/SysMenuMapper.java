@@ -39,5 +39,12 @@ public interface SysMenuMapper {
      */
     int checkCountByParam(@Param("name") String name,@Param("parentId") Integer parentId);
 
+    /**
+     *根据Level查询菜单信息
+     * @param Level String  菜单级别
+     * @return SysMenu
+     */
+    public SysMenu getSysDeptByLevelAndName(@Param("level") String Level,@Param("name") String name);
+
 
 }

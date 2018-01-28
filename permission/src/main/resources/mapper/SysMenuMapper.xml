@@ -202,5 +202,15 @@
         </if>
     </select>
 
+    <select id="getSysDeptByLevelAndName" parameterType="String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_menu
+        where level = #{level} and name = #{name}
+
+    </select>
+
+
+
 
 </mapper>

@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -64,6 +63,20 @@ public class SysMenuService {
             throw new ParamException("当前菜单下已经有叫" + sysMenu.getName() + "名称的菜单了");
         }
         sysMenuMapper.insertSelective(sysMenu);
+        updateMenuUrl(sysMenu.getLevel(),sysMenu.getName());
+    }
+
+    /**
+     *更新URL   给URL后面加上？id=菜单的ID
+     * 用于界面展示
+     */
+    public void updateMenuUrl(String level,String name){
+        SysMenu sysMenu = sysMenuMapper.getSysDeptByLevelAndName(level,name);
+
+      if(StringUtils.isNotBlank(sysMenu.getUrl())){
+          sysMenu.setUrl(sysMenu.getUrl() + "?id=" + sysMenu.getId());
+          sysMenuMapper.updateByPrimaryKeySelective(sysMenu);
+      }
 
     }
 
@@ -80,7 +93,12 @@ public class SysMenuService {
         Preconditions.checkNotNull(oldSysMenu, "待更新的菜单不存在");
         SysMenu newSysMenu = SysMenuParam.sysMenuParamToSysMenu(sysMenuParam);
         newSysMenu.setId(sysMenuParam.getId());
-
+        // 如果有URL需要增加上id=这样的值，方便界面展示导航菜单，这是跳转界面
+        if(StringUtils.isNotBlank(newSysMenu.getUrl())){
+            if(newSysMenu.getUrl().indexOf("?id=") == -1){
+                newSysMenu.setUrl(newSysMenu.getUrl()  + "?id=" + newSysMenu.getId());
+            }
+        }
         sysMenuMapper.updateByPrimaryKeySelective(newSysMenu);
     }
 
@@ -169,7 +187,7 @@ public class SysMenuService {
     }
 
     /**
-     * 递归生成树
+     * 处理第二级数据
      *
      * @param rootSysMenu 第一级菜单
      * @param multimap    Multimap 所有菜单
